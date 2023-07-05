@@ -1,0 +1,86 @@
+import random
+from fractions import Fraction
+import time
+
+# Function to generate a random fraction
+def generate_fraction():
+    numerator = random.randint(1, 10)
+    denominator = random.randint(1, 10)
+    return Fraction(numerator, denominator)
+
+# Function to generate a random operator
+def generate_operator():
+    operators = ['+', '-', 'x', '÷']
+    return random.choice(operators)
+
+# Function to validate user's answer
+def validate_answer(num1, operator, num2, answer):
+    if operator == '+':
+        correct_answer = num1 + num2
+    elif operator == '-':
+        correct_answer = num1 - num2
+    elif operator == 'x':
+        correct_answer = num1 * num2
+    else:
+        correct_answer = num1 / num2
+
+    return answer == correct_answer
+
+# Main game loop
+def play_game():
+    score = 0
+    game_round = 1
+
+    while True:
+        print("Round", game_round)
+        num1 = generate_fraction()
+        num2 = generate_fraction()
+        operator = generate_operator()
+
+        print("First Card:", num1)
+        print("Operator Card:", operator)
+        print("Third Card:", num2)
+
+        answer = input("Enter your answer: ")
+        if answer == 'exit':
+            break
+
+        try:
+            answer = Fraction(answer)
+            start_time = time.time()  # Start the timer
+
+            # Wait for user input within the time limit
+            while time.time() - start_time <= 30:
+                if validate_answer(num1, operator, num2, answer):
+                    print("Correct!")
+                    score += 5
+                else:
+                    print("Incorrect!")
+                game_round += 1
+                break  # Break out of the timer loop
+
+            print("Time's up!")
+            break  # Break out of the game loop
+
+        except ValueError:
+            print("Invalid input. Please enter a valid fraction.")
+
+    print("Game Over")
+    print("Your score:", score)
+
+# Game instructions
+def show_instructions():
+    print("Welcome to the Card Math Game!")
+    print("In this game, you will be presented with three cards:")
+    print("The first and third cards will show random fractions.")
+    print("The middle card will show a random operator (+, -, x, ÷).")
+    print("Your task is to calculate the correct answer for the given expression.")
+    print("You will have 30 seconds to submit your answer.")
+    print("If you submit the correct answer within the time limit, you will get 5 points.")
+    print("If you fail to submit the answer or provide an incorrect answer, you will be out.")
+    print("Enter 'exit' at any time to quit the game.")
+    print("Good luck!")
+
+# Start the game
+show_instructions()
+play_game()
